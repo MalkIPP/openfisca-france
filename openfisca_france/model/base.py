@@ -35,6 +35,8 @@ from openfisca_core.formulas import (dated_function, DatedFormulaColumn, EntityT
     requested_period_added_value, requested_period_default_value, requested_period_last_value,
     set_input_dispatch_by_period, set_input_divide_by_period, SimpleFormulaColumn)
 
+from openfisca_survey_manager.statshelpers import mark_weighted_percentiles, weighted_quantiles
+
 from ..entities import entity_class_by_symbol, Familles, FoyersFiscaux, Individus, Menages
 
 
@@ -85,6 +87,8 @@ __all__ = [
     'StrCol',
     'TAUX_DE_PRIME',
     'VOUS',
+    'mark_weighted_percentiles',
+    'weighted_quantiles',
     ]
 
 CAT = Enum([

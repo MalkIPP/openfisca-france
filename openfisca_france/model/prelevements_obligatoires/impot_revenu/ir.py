@@ -1315,6 +1315,7 @@ class iaidrdi(SimpleFormulaColumn):
         period = period.start.offset('first-of', 'month').period('year')
         ip_net = simulation.calculate('ip_net', period)
         reductions = simulation.calculate('reductions', period)
+        print "ça passe par ici reference"
 
         return period, ip_net - reductions
 

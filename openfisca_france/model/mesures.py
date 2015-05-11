@@ -620,3 +620,47 @@ class check_crds(SimpleFormulaColumn):
         crds_fon = self.sum_by_entity(crds_fon)
 
         return period, crds_cap_bar + crds_pv_mo + crds_fon
+
+
+@reference_formula
+class weight_foyers(SimpleFormulaColumn):
+    column = FloatCol
+    entity_class = FoyersFiscaux
+    label = u"Poids du foyer fiscal",
+
+    def function(self, simulation, period):
+        weight_individus_holder = simulation.calculate('weight_individus', period)
+        return period, self.filter_role(weight_individus_holder, entity = "foyer_fiscal", role = VOUS)
+
+
+@reference_formula
+class decile_rfr(SimpleFormulaColumn):
+    column = EnumCol(
+        enum = Enum([
+            u"Hors champ",
+            u"1er décile",
+            u"2nd décile",
+            u"3e décile",
+            u"4e décile",
+            u"5e décile",
+            u"6e décile",
+            u"7e décile",
+            u"8e décile",
+            u"9e décile",
+            u"10e décile"
+            ])
+        )
+
+    entity_class = FoyersFiscaux
+    label = u"Décile de niveau de vie"
+
+    def function(self, simulation, period):
+        rfr = simulation.calculate('rfr', period)
+        weight_foyers = simulation.calculate('weight_foyers', period)
+        import numpy
+        labels = numpy.arange(1, 11)
+        # Alternative method
+        # method = 2
+        # decile, values = mark_weighted_percentiles(niveau_de_vie, labels, pondmen, method, return_quantiles = True)
+        decile, values = weighted_quantiles(rfr, labels, weight_foyers, return_quantiles = True)
+        return period, decile
